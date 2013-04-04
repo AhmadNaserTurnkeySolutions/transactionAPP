@@ -15,30 +15,43 @@ class IndexController extends Zend_Controller_Action
     public function indexAction()
     {
     	
-    	$foo = Zend_Registry::get('foo');
+   
     	
-    	echo $foo;
-    	
-    /*	$db1 = Zend_Db::factory('Pdo_Mysql', array(
+
+    /* :: 1
+     * 
+     * Manual Creation for db adapter
+     * 
+     * 
+     * 
+     * 	$db1 = Zend_Db::factory('Pdo_Mysql', array(
     			'host'     => 'localhost',
     			'username' => 'root',
     			'password' => '',
     			'dbname'   => 'ttaworapps'
     	));
+    *	
+    *	
     */
     	
     	
+    
+    
     	
-    	/* Get Default adapter from the application ini
-    	 * 
-    	 * 
-    	 * */
-    	
-    	$bootstrap = $this->getInvokeArg('bootstrap');
+   /* ::2 
+    * 
+    * Get the db adapter from the ini file through bootstrap
+    * 
+    * $bootstrap = $this->getInvokeArg('bootstrap');
     	$dbResource = $bootstrap->getPluginResource('db');
     	$db = $dbResource->getDbAdapter();
+    *
+    *
+    */
     	
-    //	print_r($db);
+
+    	
+    	$db = Zend_Registry::get('database');
     	
     	
     	
@@ -68,6 +81,22 @@ class IndexController extends Zend_Controller_Action
     	);
     	
     	
+    	
+    	
+    	 /* ::3
+    	  * 
+    	  * Transaction Implementation
+    	  * 
+    	  * begin
+    	  * commit
+    	  * rollback
+    	  * 
+    	  * */
+    	
+    	
+    	
+    	/*********************************************************************/
+    	
     	// Start a transaction explicitly.
     	$db->beginTransaction();
     	
@@ -94,10 +123,60 @@ $this->dao->createUser($user_Ob);
     	
     	
     	
+    	/*********************************************************************/
+    	
+    	
+    	
+    	/* ::1 (Fetching Data using traditional array method)
+    	 * 
+    	 * one by one
+    	 * 
+    	 * */
+    	
+    	$stmt = $db->query(
+    			'SELECT * FROM user WHERE user_id = ? AND fb_first_name = ?',
+    			array('7', 'Ahmad')
+    	);
+    	 
+    	
+    	while ($row = $stmt->fetch()) {
+    		//echo $row['bug_description'];
+    		
+    		print_r($row);
+    	}
+    	
+    	
+    	
+    	
+    	
+    	
+    	/* ::2 (fetching all the data as an array at one)
+    	 * 
+    	 * fetch array
+    	 * 
+    	 * */
+    	
+        //$rows = $stmt->fetchAll();	 
+    	//echo $rows[0]['fb_email'];
+    	 
+    	
+    	
+    	/* ::3 (fetching data as an array of object)
+    	 * 
+    	 * fetch array of object
+    	 * 
+    	 * */
+    	
+    	//$obj = $stmt->fetchObject();
+     	//echo $obj->fb_website;
+    	
+    	
+    	
+    	
+    	
     	
         // action body
     }
-
 
 }
 

@@ -4,8 +4,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
 	protected function _initLogger()
 	{
-		
-		Zend_Registry::set('foo', "foo value");
+		//$bootstrap = $this->getInvokeArg('bootstrap');
+		$dbResource = $this->getPluginResource('db');
+		$db = $dbResource->getDbAdapter();
+		Zend_Registry::set('database', $db);
 	}
 
 }
